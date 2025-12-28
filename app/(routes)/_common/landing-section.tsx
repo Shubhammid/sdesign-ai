@@ -1,12 +1,15 @@
 "use client";
+
+import React, { useState } from "react";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import PromptInput from "@/components/prompt-input";
-import { Spinner } from "@/components/ui/spinner";
-import React, { useState } from "react";
 import Header from "./header";
+import { useCreateProject } from "@/features/use-project";
 
 const LandingSection = () => {
     const [promptText, setPromptText] = useState<string>("");
+
+    const { mutate, isPending } = useCreateProject();
 
     const suggestions = [
         {
@@ -45,6 +48,12 @@ const LandingSection = () => {
         setPromptText(val);
     };
 
+    const handleSubmit = () => {
+      if (!promptText) return;
+      mutate(promptText);
+    };
+
+
   return (
     <div className=" w-full min-h-screen">
 
@@ -74,8 +83,8 @@ const LandingSection = () => {
                     className="ring-2 ring-primary"
                     promptText={promptText}
                     setPromptText={setPromptText}
-                    isLoading={false}
-                    onSubmit={() => {}} />
+                    isLoading={isPending}
+                    onSubmit={handleSubmit} />
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 px-5">
